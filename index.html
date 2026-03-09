@@ -1,1 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Whitakr Automate — AI Workflow Automation for Law Firms</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black:    #0a0a0a;
+      --off:      #111111;
+      --surface:  #161616;
+      --border:   #252525;
+      --muted:    #555;
+      --body:     #a8a8a8;
+      --light:    #e8e4dc;
+      --white:    #f5f1eb;
+      --accent:   #c8a96e;   /* warm gold */
+      --accent2:  #e05c3a;   /* rust red for CTAs */
+      --gap: clamp(60px, 8vw, 120px);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--body);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      font-size: 16px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── TYPOGRAPHY ─────────────────────────────────────── */
+    h1, h2, h3, h4 {
+      font-family: 'Playfair Display', serif;
+      color: var(--white);
+      line-height: 1.1;
+    }
+    .mono { font-family: 'DM Mono', monospace; }
+
+    /* ── LAYOUT ─────────────────────────────────────────── */
+    .container { max-width: 1140px; margin: 0 auto; padding: 0 clamp(20px, 5vw, 60px); }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; }
+
+    /* ── NAV ────────────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 20px clamp(20px, 5vw, 60px);
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid transparent;
+      transition: all 0.4s;
+    }
+    nav.scrolled {
+      background: rgba(10,10,10,0.95);
+      border-bottom-color: var(--border);
+      backdrop-filter: blur(12px);
+    }
+    .nav-logo {
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      color: var(--accent);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+    }
+    .nav-cta {
+      background: var(--accent2);
+      color: #fff;
+      border: none;
+      padding: 10px 22px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      transition: opacity 0.2s;
+      text-decoration: none;
+    }
+    .nav-cta:hover { opacity: 0.85; }
+
+    /* ── HERO ────────────────────────────────────────────── */
+    #hero {
+      min-height: 100vh;
+      display: flex; align-items: flex-end;
+      padding: 0 clamp(20px, 5vw, 60px) 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 60% 60% at 70% 40%, rgba(200,169,110,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 40% at 20% 80%, rgba(224,92,58,0.04) 0%, transparent 50%);
+    }
+
+    .hero-grid-lines {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(to right, rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 80px 80px;
+    }
+
+    .hero-inner {
+      position: relative; z-index: 2;
+      max-width: 1140px; width: 100%;
+      display: grid; grid-template-columns: 1fr 420px; gap: 80px; align-items: end;
+    }
+
+    .hero-eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      display: block; width: 32px; height: 1px; background: var(--accent);
+    }
+
+    .hero h1 {
+      font-size: clamp(52px, 7vw, 96px);
+      font-weight: 900;
+      color: var(--white);
+      letter-spacing: -0.02em;
+      margin-bottom: 32px;
+    }
+    .hero h1 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .hero-sub {
+      font-size: 18px;
+      color: var(--body);
+      max-width: 520px;
+      line-height: 1.65;
+      margin-bottom: 48px;
+    }
+
+    .hero-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 40px;
+    }
+    .hero-card-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .hero-card h3 {
+      font-size: 22px;
+      margin-bottom: 16px;
+    }
+    .hero-card p {
+      font-size: 14px;
+      line-height: 1.65;
+      color: var(--body);
+      margin-bottom: 28px;
+    }
+    .btn-primary {
+      display: inline-block;
+      background: var(--accent2);
+      color: #fff;
+      padding: 14px 28px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      transition: opacity 0.2s, transform 0.2s;
+      width: 100%;
+      text-align: center;
+    }
+    .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+
+    .hero-disclaimer {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 12px;
+      text-align: center;
+    }
+
+    /* ── TICKER ──────────────────────────────────────────── */
+    .ticker-wrap {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: var(--off);
+      overflow: hidden;
+      padding: 16px 0;
+    }
+    .ticker {
+      display: flex; gap: 0;
+      animation: ticker-scroll 28s linear infinite;
+      width: max-content;
+    }
+    .ticker-item {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      padding: 0 40px;
+      display: flex; align-items: center; gap: 12px;
+      white-space: nowrap;
+    }
+    .ticker-item span { color: var(--accent); }
+    .ticker-sep { color: var(--border); }
+    @keyframes ticker-scroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* ── SECTION WRAPPER ─────────────────────────────────── */
+    section { padding: clamp(48px, 6vw, 80px) 0; }
+
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 32px;
+      display: flex; align-items: center; gap: 16px;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1; height: 1px; background: var(--border);
+    }
+
+    /* ── PROBLEM SECTION ─────────────────────────────────── */
+    #problem { background: var(--off); }
+
+    .problem-statement {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(28px, 4vw, 52px);
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.2;
+      max-width: 800px;
+      margin-bottom: 40px;
+    }
+    .problem-statement em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-bottom: 40px; }
+
+    .stat-box {
+      background: var(--surface);
+      padding: 32px 28px;
+      border-bottom: 3px solid transparent;
+      transition: border-color 0.3s;
+    }
+    .stat-box:hover { border-bottom-color: var(--accent); }
+    .stat-number {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(42px, 5vw, 64px);
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .stat-number sub {
+      font-size: 0.4em;
+      vertical-align: super;
+      color: var(--accent);
+    }
+    .stat-label {
+      font-size: 13px;
+      color: var(--body);
+      line-height: 1.5;
+    }
+
+    /* ── SERVICES ────────────────────────────────────────── */
+
+    .services-intro {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 60px; margin-bottom: 40px; align-items: end;
+    }
+    .services-intro h2 { font-size: clamp(36px, 4vw, 58px); }
+    .services-intro p { font-size: 16px; line-height: 1.7; }
+
+    .service-list { display: flex; flex-direction: column; gap: 2px; }
+
+    .service-item {
+      background: var(--surface);
+      padding: 28px 36px;
+      display: grid;
+      grid-template-columns: 48px 1fr auto;
+      gap: 24px;
+      align-items: start;
+      cursor: default;
+      border-left: 3px solid transparent;
+      transition: all 0.25s;
+    }
+    .service-item:hover {
+      background: var(--off);
+      border-left-color: var(--accent);
+    }
+
+    .service-num {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      padding-top: 6px;
+    }
+    .service-body h3 { font-size: 22px; margin-bottom: 10px; }
+    .service-body p { font-size: 14px; color: var(--body); line-height: 1.65; }
+
+    .service-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: rgba(200,169,110,0.08);
+      padding: 4px 10px;
+      white-space: nowrap;
+      margin-top: 4px;
+    }
+
+    /* ── OPENCLAW ────────────────────────────────────────── */
+    #openclaw {
+      background: var(--off);
+    }
+
+    .openclaw-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .openclaw-visual {
+      position: relative;
+      height: 420px;
+    }
+
+    .flow-node {
+      position: absolute;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 14px 20px;
+      font-size: 13px;
+      color: var(--light);
+      white-space: nowrap;
+      transition: border-color 0.3s;
+    }
+    .flow-node.active { border-color: var(--accent); color: var(--accent); }
+
+    .flow-line {
+      position: absolute;
+      background: var(--border);
+    }
+    .flow-line.lit { background: var(--accent); opacity: 0.5; }
+
+    .openclaw-inner h2 { font-size: clamp(32px, 3.5vw, 50px); margin-bottom: 24px; }
+    .openclaw-inner p { font-size: 15px; line-height: 1.75; margin-bottom: 20px; }
+
+    .feature-list { list-style: none; margin: 28px 0; }
+    .feature-list li {
+      display: flex; gap: 12px; align-items: flex-start;
+      font-size: 14px; color: var(--body);
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .feature-list li:last-child { border-bottom: none; }
+    .feature-list li::before {
+      content: '→';
+      color: var(--accent);
+      font-family: 'DM Mono', monospace;
+      flex-shrink: 0;
+    }
+
+    /* ── PROCESS ─────────────────────────────────────────── */
+
+    .process-header {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 60px; margin-bottom: 40px;
+    }
+    .process-header h2 { font-size: clamp(36px, 4vw, 58px); }
+    .process-header p { font-size: 16px; padding-top: 16px; }
+
+    .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; }
+
+    .step {
+      background: var(--surface);
+      padding: 28px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .step::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--border);
+      transition: background 0.3s;
+    }
+    .step:hover::before { background: var(--accent); }
+
+    .step-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 52px;
+      font-weight: 900;
+      color: var(--border);
+      line-height: 1;
+      margin-bottom: 14px;
+      display: block;
+    }
+    .step h4 { font-size: 17px; margin-bottom: 10px; }
+    .step p { font-size: 13px; color: var(--body); line-height: 1.65; }
+
+    /* ── PROOF / ABOUT ───────────────────────────────────── */
+    #about { background: var(--off); }
+
+    .about-inner {
+      display: grid; grid-template-columns: 1fr 420px; gap: 80px; align-items: start;
+    }
+
+    .about-inner h2 { font-size: clamp(36px, 4vw, 56px); margin-bottom: 28px; }
+    .about-inner p { font-size: 15px; line-height: 1.8; margin-bottom: 18px; }
+
+    .credentials { list-style: none; margin: 32px 0 0; }
+    .credentials li {
+      display: flex; gap: 14px; align-items: flex-start;
+      font-size: 14px; color: var(--body);
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .credentials li:first-child { border-top: 1px solid var(--border); }
+    .cred-icon { color: var(--accent); font-family: 'DM Mono', monospace; flex-shrink: 0; }
+
+    .testimonial-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 40px;
+      position: sticky; top: 120px;
+    }
+    .quote-mark {
+      font-family: 'Playfair Display', serif;
+      font-size: 80px;
+      color: var(--accent);
+      line-height: 0.6;
+      margin-bottom: 20px;
+      display: block;
+    }
+    .testimonial-box blockquote {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      font-style: italic;
+      color: var(--light);
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+    .testimonial-attr {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* ── OFFER / CTA ─────────────────────────────────────── */
+    #cta {
+      background: var(--black);
+      border-top: 1px solid var(--border);
+    }
+
+    .offer-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      display: grid; grid-template-columns: 1fr 380px; gap: 0;
+    }
+
+    .offer-left { padding: 60px; border-right: 1px solid var(--border); }
+    .offer-left h2 { font-size: clamp(32px, 3.5vw, 48px); margin-bottom: 24px; }
+    .offer-left p { font-size: 15px; line-height: 1.75; margin-bottom: 16px; }
+
+    .offer-right { padding: 60px; display: flex; flex-direction: column; justify-content: space-between; }
+
+    .offer-list { list-style: none; margin: 0 0 32px; }
+    .offer-list li {
+      display: flex; gap: 12px;
+      font-size: 14px; color: var(--body);
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .offer-list li::before { content: '✓'; color: var(--accent); font-weight: bold; flex-shrink: 0; }
+
+    .offer-price {
+      font-family: 'Playfair Display', serif;
+      font-size: 52px;
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .offer-price-note {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 28px;
+      font-family: 'DM Mono', monospace;
+      letter-spacing: 0.06em;
+    }
+
+    /* ── FOOTER ──────────────────────────────────────────── */
+    footer {
+      background: var(--off);
+      border-top: 1px solid var(--border);
+      padding: 48px 0;
+    }
+    .footer-inner {
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .footer-left {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+    }
+    .footer-left a { color: var(--accent); text-decoration: none; }
+    .footer-right {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+
+    /* ── ANIMATE ON SCROLL ───────────────────────────────── */
+    .reveal {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .js-loaded .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+    }
+    .js-loaded .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── RESPONSIVE ──────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .hero-inner, .services-intro, .openclaw-inner, .process-header,
+      .about-inner, .grid-2 { grid-template-columns: 1fr; gap: 40px; }
+      .stat-grid, .steps { grid-template-columns: 1fr 1fr; }
+      .offer-box { grid-template-columns: 1fr; }
+      .offer-left { border-right: none; border-bottom: 1px solid var(--border); }
+      .openclaw-visual { display: none; }
+      .service-item { grid-template-columns: 40px 1fr; }
+      .service-tag { display: none; }
+    }
+    @media (max-width: 600px) {
+      .stat-grid, .steps { grid-template-columns: 1fr; }
+      .footer-inner { flex-direction: column; gap: 12px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">Whitakr Automate</a>
+  <a href="https://calendly.com/whitakr-automate/30min" target="_blank" class="nav-cta">Book Free Call</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid-lines"></div>
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-eyebrow">Whitakr Automate — AI Workflow Automation for Law Firms</div>
+      <h1>Your firm is<br><em>haemorrhaging</em><br>billable hours.</h1>
+      <p class="hero-sub">The manual processes running your law firm were designed for a world before AI. I build custom automation systems that eliminate the repetitive work — so your team focuses on what actually wins cases.</p>
+    </div>
+    <div class="hero-right">
+      <div class="hero-card reveal">
+        <div class="hero-card-label">// Free Consultation</div>
+        <h3>What's a 30-minute call worth?</h3>
+        <p>We map one workflow in your firm. I show you exactly where AI can eliminate hours of manual work. No pitch. No obligation. Just a clear picture of what's possible.</p>
+        <a href="https://calendly.com/whitakr-automate/30min" target="_blank" class="btn-primary">Book Your Free Call →</a>
+        <p class="hero-disclaimer">No cost. No commitment. Usually 30 minutes.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker">
+    <!-- repeated twice for seamless loop -->
+    <span class="ticker-item">CHRONOLOGY AUTOMATION <span class="ticker-sep">///</span></span>
+    <span class="ticker-item">BREACH ANALYSIS AI <span class="ticker-sep">///</span></span>
+    <span class="ticker-item">AGENTIC WORKFLOWS <span class="ticker-sep">///</span></span>
+    <span class="ticker-item">OPENCLAW SETUP <span class="ticker-sep">///</span></span>
+    <span class="ticker-item">DOCUMENT INTELLIGENCE <span class="ticker-sep">///</span></span>
+    <span class="ticker-item">PROCESS AUTOMATION <span class="ticker-sep">///</span></span>
+    <span class="ticker-item">CUSTOM AI TOOLS <span class="ticker-sep">///</span></span>
+    <span class="ticker-item">LAW FIRM WORKFLOWS <span class="ticker-sep">///</span></span>
+    <span class="ticker-item">CHRONOLOGY AUTOMATION <span class="ticker-sep">///</span></span>
+    <span class="ticker-item">BREACH ANALYSIS AI <span class="ticker-sep">///</span></span>
+    <span class="ticker-item">AGENTIC WORKFLOWS <span class="ticker-sep">///</span></span>
+    <span class="ticker-item">OPENCLAW SETUP <span class="ticker-sep">///</span></span>
+    <span class="ticker-item">DOCUMENT INTELLIGENCE <span class="ticker-sep">///</span></span>
+    <span class="ticker-item">PROCESS AUTOMATION <span class="ticker-sep">///</span></span>
+    <span class="ticker-item">CUSTOM AI TOOLS <span class="ticker-sep">///</span></span>
+    <span class="ticker-item">LAW FIRM WORKFLOWS <span class="ticker-sep">///</span></span>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section id="problem">
+  <div class="container">
+    <div class="section-label">The Problem</div>
+
+    <p class="problem-statement reveal">
+      The average small law firm loses <em>30–40%</em> of its billable capacity to tasks a machine could do in minutes.
+    </p>
+
+    <div class="stat-grid reveal">
+      <div class="stat-box">
+        <div class="stat-number">6.3<sub>hrs</sub></div>
+        <div class="stat-label">Average hours per week spent on document review and data entry per fee earner at a small firm</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-number">$180k</div>
+        <div class="stat-label">Annual revenue lost by a 3-lawyer firm from non-billable administrative overhead</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-number">83%</div>
+        <div class="stat-label">of legal professionals say manual document handling is their firm's single biggest time drain</div>
+      </div>
+    </div>
+
+    <div class="grid-2 reveal">
+      <div>
+        <h2 style="font-size: clamp(28px, 3vw, 42px); margin-bottom: 20px;">Tools exist. Expertise to deploy them doesn't.</h2>
+        <p style="font-size: 15px; line-height: 1.8;">Off-the-shelf AI tools are built for marketing teams, not law firms. They don't understand your workflow, your file structure, your precedents, or your risk tolerance. Generic AI fails in specialist domains — every time.</p>
+      </div>
+      <div>
+        <p style="font-size: 15px; line-height: 1.8; padding-top: 8px;">Whitakr Automate was built from inside legal practice. We understand the intake process, the document review, the breach analysis, the expert brief — and we've automated it. We bring that same workflow-first approach to every engagement. Not templates. Not demos. Real systems, built around how you actually work.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="container">
+    <div class="section-label">What We Build</div>
+
+    <div class="services-intro reveal">
+      <h2>Six ways to get<br>your time back.</h2>
+      <p>Every engagement starts with a workflow audit. We map how your firm operates today, identify the highest-value automation targets, and build systems that slot directly into your existing practice — not alongside it.</p>
+    </div>
+
+    <div class="service-list">
+
+      <div class="service-item reveal">
+        <span class="service-num">01</span>
+        <div class="service-body">
+          <h3>Agentic AI Systems</h3>
+          <p>Multi-step AI agents that work autonomously across your cases. Intake a file, extract the key facts, flag risks, draft correspondence, and notify the relevant person — all without a human in the loop. Think of it as a tireless paralegal that never makes a typo.</p>
+        </div>
+        <span class="service-tag">Most Popular</span>
+      </div>
+
+      <div class="service-item reveal">
+        <span class="service-num">02</span>
+        <div class="service-body">
+          <h3>Document Intelligence Pipelines</h3>
+          <p>Upload a 500-page clinical record, contract bundle, or discovery folder. Get back a structured, searchable chronology, summary, and flagged anomalies in minutes. Purpose-built for your document types — not generic summarisation.</p>
+        </div>
+        <span class="service-tag">High ROI</span>
+      </div>
+
+      <div class="service-item reveal">
+        <span class="service-num">03</span>
+        <div class="service-body">
+          <h3>OpenClaw Setup &amp; Configuration</h3>
+          <p>OpenClaw is an open-source AI agent platform — not a legal tool by default, but one of the most powerful foundations for building automated workflows in any industry, including law. Think of it as infrastructure for digital employees: agents that handle intake, process documents, draft responses, and escalate exceptions — around the clock, without payroll. We handle full deployment and configuration for your firm.</p>
+        </div>
+        <span class="service-tag">Fixed Price</span>
+      </div>
+
+      <div class="service-item reveal">
+        <span class="service-num">04</span>
+        <div class="service-body">
+          <h3>Precedent &amp; Template Automation</h3>
+          <p>Your precedent bank is an untapped asset. We build systems that retrieve the right template, pre-fill it with matter-specific data, and route it for review — cutting letter drafting from 40 minutes to under 5. Works with your existing document management system.</p>
+        </div>
+        <span class="service-tag">Quick Win</span>
+      </div>
+
+      <div class="service-item reveal">
+        <span class="service-num">05</span>
+        <div class="service-body">
+          <h3>Intake &amp; Triage Automation</h3>
+          <p>New enquiries assessed, categorised, and screened before a lawyer touches them. AI-powered triage means your fee earners only spend time on viable matters — and your firm stops losing quality cases in an overflowing inbox.</p>
+        </div>
+        <span class="service-tag">Revenue Impact</span>
+      </div>
+
+      <div class="service-item reveal">
+        <span class="service-num">06</span>
+        <div class="service-body">
+          <h3>Custom Workflow Automation</h3>
+          <p>Any repetitive, rules-based process in your firm is a candidate. Billing summaries, court deadline tracking, file status reporting, compliance checklists — if you've ever thought "a machine should do this," it probably can. We'll build it.</p>
+        </div>
+        <span class="service-tag">Bespoke</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- OPENCLAW -->
+<section id="openclaw">
+  <div class="container">
+    <div class="openclaw-inner">
+
+      <div class="openclaw-visual" aria-hidden="true">
+        <!-- Animated flow diagram -->
+        <div class="flow-node active" style="top: 20px; left: 40px; font-family: 'DM Mono', monospace; font-size:12px;">Client Intake Form</div>
+        <div class="flow-line" style="top: 54px; left: 192px; width: 2px; height: 48px;"></div>
+        <div class="flow-node" style="top: 102px; left: 20px; font-family: 'DM Mono', monospace; font-size:12px;">Document Upload</div>
+        <div class="flow-line" style="top: 136px; left: 160px; width: 2px; height: 48px;"></div>
+        <div class="flow-node active" style="top: 184px; left: 60px; font-family: 'DM Mono', monospace; font-size:12px;">AI Processing Agent</div>
+        <div class="flow-line" style="top: 218px; left: 210px; width: 2px; height: 48px;"></div>
+        <div class="flow-node" style="top: 266px; left: 10px; font-family: 'DM Mono', monospace; font-size:12px;">Chronology Generated</div>
+        <div class="flow-node" style="top: 266px; left: 220px; font-family: 'DM Mono', monospace; font-size:12px;">Risk Flags Raised</div>
+        <div class="flow-line" style="top: 300px; left: 110px; width: 2px; height: 48px;"></div>
+        <div class="flow-line" style="top: 300px; left: 310px; width: 2px; height: 48px;"></div>
+        <div class="flow-node active" style="top: 348px; left: 80px; font-family: 'DM Mono', monospace; font-size:12px;">Lawyer Review Dashboard</div>
+        <div style="position:absolute; bottom: 0; right: 0; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); letter-spacing: 0.08em;">// Automated. Overnight.</div>
+      </div>
+
+      <div>
+        <div class="section-label">OpenClaw</div>
+        <h2>Your firm. Running<br>while you sleep.</h2>
+        <p>OpenClaw is an open-source platform for building and deploying AI agents — autonomous software workers that can execute multi-step tasks without human input. It's not a legal tool by design. It's something more fundamental: infrastructure for replacing repetitive human work with software that runs 24 hours a day, 7 days a week, at no extra cost.</p>
+        <p>Think of it as hiring staff who never take leave, never miss a deadline, and process ten matters simultaneously while your team goes home for the evening. A client submits an enquiry at 11pm — OpenClaw reads it, extracts the key facts, categorises the matter type, checks your conflicts register, and drafts a response — before your first fee earner arrives in the morning.</p>
+        <p>We configure and deploy OpenClaw specifically for legal workflows: document intake, matter triage, deadline monitoring, correspondence drafting, and more. The platform itself is free. What we provide is the expertise to make it work for your exact practice.</p>
+
+        <ul class="feature-list">
+          <li>Full deployment on your infrastructure — your data stays yours</li>
+          <li>Legal workflow configuration: intake, triage, drafting, and escalation</li>
+          <li>Integration with your practice management and document systems</li>
+          <li>Custom-trained on your precedents, templates, and matter types</li>
+          <li>Staff onboarding so your team knows how to work alongside it</li>
+        </ul>
+
+        <a href="https://calendly.com/whitakr-automate/30min" target="_blank" class="btn-primary" style="max-width: 300px; display: inline-block;">Ask About OpenClaw →</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="process">
+  <div class="container">
+    <div class="section-label">How It Works</div>
+
+    <div class="process-header reveal">
+      <h2>From conversation<br>to running system<br>in weeks.</h2>
+      <p style="padding-top: 12px;">No six-month consulting engagements. No ambiguous deliverables. We move fast, communicate clearly, and don't leave until it works.</p>
+    </div>
+
+    <div class="steps">
+      <div class="step reveal">
+        <span class="step-num">1</span>
+        <h4>Workflow Audit</h4>
+        <p>30-minute call. We map one process end-to-end: inputs, steps, bottlenecks, and the human time it consumes each week. Free. No obligation.</p>
+      </div>
+      <div class="step reveal">
+        <span class="step-num">2</span>
+        <h4>Proposal &amp; Scope</h4>
+        <p>You receive a plain-English document: what we'll build, how it'll work, what it'll save you, and what it costs. Fixed price. No scope creep.</p>
+      </div>
+      <div class="step reveal">
+        <span class="step-num">3</span>
+        <h4>Build &amp; Test</h4>
+        <p>We build the system, test it against your real documents, and iterate until the output meets your standard. You're involved, but not doing the work.</p>
+      </div>
+      <div class="step reveal">
+        <span class="step-num">4</span>
+        <h4>Deploy &amp; Hand Over</h4>
+        <p>System goes live in your environment. We document the workflow, train your staff, and hand it over. You own it outright — no ongoing dependency unless you want it.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT / PROOF -->
+<section id="about">
+  <div class="container">
+    <div class="about-inner">
+      <div>
+        <div class="section-label">Why Trust Us</div>
+        <h2>Built from inside<br>legal practice.</h2>
+        <p>Whitakr Automate wasn't built by software developers who decided to target law firms. It was built from inside legal practice — processing clinical records, drafting correspondence, watching fee earners spend half their day on work a well-configured machine could do in minutes.</p>
+        <p>That inside knowledge is why our systems work where generic AI tools fail. We don't automate what's easy to automate. We automate what actually costs your firm the most time — because we know what that looks like from the inside.</p>
+        <p>Every engagement is hands-on. You won't be handed off to a junior or a template. The person who scopes the work builds the work.</p>
+
+        <ul class="credentials">
+          <li><span class="cred-icon">→</span>Deep background in medical negligence practice — clinical records, breach analysis, expert briefs</li>
+          <li><span class="cred-icon">→</span>Built and deployed full agentic AI pipelines for legal workflows in production</li>
+          <li><span class="cred-icon">→</span>Specialists in Australian law firm environments and compliance requirements</li>
+          <li><span class="cred-icon">→</span>Fixed-price engagements — no billable hour surprises</li>
+          <li><span class="cred-icon">→</span>You own what we build. No lock-in, no ongoing dependency.</li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="testimonial-box reveal">
+          <span class="quote-mark">"</span>
+          <blockquote>What they built removed the most time-consuming part of our intake process. What used to take a paralegal half a day now takes minutes — and the output is more consistent than anything we were producing manually.</blockquote>
+          <div class="testimonial-attr">— Pilot Firm, NSW Medical Negligence Practice</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA / OFFER -->
+<section id="cta">
+  <div class="container">
+    <div class="section-label reveal">The Offer</div>
+    <div class="offer-box reveal">
+      <div class="offer-left">
+        <h2>A free workflow audit is a no-brainer.</h2>
+        <p>Thirty minutes. We map one process in your firm and show you exactly what's automatable, what the ROI looks like, and how long it would take to build. You walk away with a clear picture — whether you engage us or not.</p>
+        <p>If you don't see at least 5 hours of time savings per week identified in that call, you've lost 30 minutes. If you do — and most firms do — you'll want to talk next steps.</p>
+        <p style="color: var(--light); font-weight: 500;">Most firms identify $3,000–$12,000 in monthly value during the first call alone.</p>
+      </div>
+      <div class="offer-right">
+        <div>
+          <ul class="offer-list">
+            <li>Workflow mapping session (normally $350)</li>
+            <li>Automation opportunity report</li>
+            <li>ROI estimate for top 3 candidates</li>
+            <li>Plain-English technical feasibility</li>
+            <li>No sales pitch, no pressure</li>
+          </ul>
+        </div>
+        <div>
+          <div class="offer-price">Free</div>
+          <div class="offer-price-note">// 30 minute Zoom call</div>
+          <a href="https://calendly.com/whitakr-automate/30min" target="_blank" class="btn-primary">Book Your Free Call →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-left">
+        © 2026 Whitakr Automate
+      </div>
+      <div class="footer-right">
+        whitakr.com.au · Melbourne, VIC
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Nav scroll
+  const nav = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+  });
+
+  // Reveal on scroll - only activate animation if JS runs fine
+  document.documentElement.classList.add('js-loaded');
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 60);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.05, rootMargin: '0px 0px -40px 0px' });
+  reveals.forEach(el => observer.observe(el));
+
+  // Flow diagram pulse animation
+  const nodes = document.querySelectorAll('.flow-node');
+  const lines = document.querySelectorAll('.flow-line');
+  
+  let currentNode = 0;
+  setInterval(() => {
+    nodes.forEach(n => n.classList.remove('active'));
+    lines.forEach(l => l.classList.remove('lit'));
+    if (nodes[currentNode]) {
+      nodes[currentNode].classList.add('active');
+      if (lines[currentNode]) lines[currentNode].classList.add('lit');
+    }
+    currentNode = (currentNode + 1) % nodes.length;
+  }, 1200);
+</script>
+
+</body>
+</html>
