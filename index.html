@@ -91,7 +91,7 @@
     /* ── HERO ────────────────────────────────────────────── */
     #hero {
       min-height: 100vh;
-      display: flex; align-items: center;
+      display: flex; align-items: flex-end;
       padding: 0 clamp(20px, 5vw, 60px) 80px;
       position: relative;
       overflow: hidden;
@@ -574,29 +574,199 @@
       .stat-grid, .steps { grid-template-columns: 1fr; }
       .footer-inner { flex-direction: column; gap: 12px; text-align: center; }
     }
+
+    /* ── NAV LINKS ─────────────────────────────────────── */
+    .nav-links {
+      display: flex; align-items: center; gap: 24px;
+    }
+    .nav-link {
+      font-family: 'DM Mono', monospace; font-size: 12px; color: var(--muted);
+      letter-spacing: 0.06em; text-decoration: none; text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-link:hover { color: var(--accent); }
+
+    /* ── FIVE-MINUTE MATH ──────────────────────────────── */
+    #five-minute-math { background: var(--black); padding: clamp(80px, 10vw, 160px) 0; }
+    .fmp-container { max-width: 800px; margin: 0 auto; padding: 0 clamp(20px, 5vw, 60px); text-align: center; }
+    .fmp-label {
+      font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted);
+      letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 48px;
+      display: flex; align-items: center; gap: 16px; justify-content: center;
+    }
+    .fmp-label::before, .fmp-label::after {
+      content: ''; flex: 0 0 40px; height: 1px; background: var(--border);
+    }
+    .fmp-line {
+      font-family: 'DM Mono', monospace; font-size: clamp(18px, 3vw, 28px);
+      color: var(--muted); line-height: 2.2; opacity: 0; transform: translateY(16px);
+      transition: opacity 0.6s ease, transform 0.6s ease, color 0.6s ease;
+    }
+    .fmp-line.fmp-visible { opacity: 1; transform: translateY(0); color: var(--body); }
+    .fmp-line.fmp-starter { color: var(--light); font-style: italic; }
+    .fmp-result {
+      font-family: 'Playfair Display', serif; font-size: clamp(64px, 10vw, 120px);
+      font-weight: 900; color: var(--accent); line-height: 1; margin-top: 40px;
+      opacity: 0; transform: scale(0.9); transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .fmp-result.fmp-visible { opacity: 1; transform: scale(1); }
+    .fmp-subtext {
+      font-family: 'DM Sans', sans-serif; font-size: clamp(16px, 2vw, 22px);
+      color: var(--light); margin-top: 20px; font-weight: 300; letter-spacing: 0.02em;
+      opacity: 0; transform: translateY(12px); transition: opacity 0.6s ease 0.3s, transform 0.6s ease 0.3s;
+    }
+    .fmp-subtext.fmp-visible { opacity: 1; transform: translateY(0); }
+
+    /* ── COST CALCULATOR ───────────────────────────────── */
+    #cost-calculator { background: var(--black); padding: clamp(60px, 8vw, 120px) 0; }
+    .calc-container { max-width: 800px; margin: 0 auto; padding: 0 clamp(20px, 5vw, 60px); }
+    .calc-label {
+      font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted);
+      letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 32px;
+      display: flex; align-items: center; gap: 16px;
+    }
+    .calc-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .calc-heading {
+      font-family: 'Playfair Display', serif; font-size: clamp(28px, 3.5vw, 46px);
+      font-weight: 700; color: var(--white); line-height: 1.15; margin-bottom: 12px;
+    }
+    .calc-subhead {
+      font-family: 'DM Sans', sans-serif; font-size: 15px; color: var(--body);
+      line-height: 1.7; margin-bottom: 40px; max-width: 600px;
+    }
+    .calc-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 40px; }
+    .calc-field label {
+      display: block; font-family: 'DM Mono', monospace; font-size: 11px;
+      color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 10px;
+    }
+    .calc-field input {
+      width: 100%; background: var(--surface); border: 1px solid var(--border); color: var(--white);
+      font-family: 'DM Mono', monospace; font-size: 20px; padding: 14px 18px;
+      outline: none; transition: border-color 0.2s;
+    }
+    .calc-field input:focus { border-color: var(--accent); }
+    .calc-results { background: var(--surface); border: 1px solid var(--border); padding: 32px; }
+    .calc-result-row {
+      display: flex; justify-content: space-between; align-items: baseline;
+      padding: 14px 0; border-bottom: 1px solid var(--border);
+    }
+    .calc-result-row:last-child { border-bottom: none; }
+    .calc-result-label { font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--body); }
+    .calc-result-value {
+      font-family: 'DM Mono', monospace; font-size: 18px; color: var(--light); font-weight: 500;
+    }
+    .calc-result-row.calc-highlight { padding-top: 20px; margin-top: 8px; border-top: 2px solid var(--border); }
+    .calc-result-row.calc-highlight .calc-result-value {
+      font-family: 'Playfair Display', serif; font-size: clamp(28px, 4vw, 40px);
+      font-weight: 900; color: var(--accent);
+    }
+    @media (max-width: 600px) {
+      .calc-inputs { grid-template-columns: 1fr; }
+    }
+
+    /* ── BEFORE/AFTER COMPARISON ────────────────────────── */
+    #before-after { background: var(--off); }
+    .ba-container { max-width: 1140px; margin: 0 auto; padding: 0 clamp(20px, 5vw, 60px); }
+    .ba-label {
+      font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted);
+      letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 32px;
+      display: flex; align-items: center; gap: 16px;
+    }
+    .ba-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .ba-heading {
+      font-family: 'Playfair Display', serif; font-size: clamp(32px, 4vw, 52px);
+      font-weight: 700; color: var(--white); line-height: 1.15; margin-bottom: 48px; max-width: 700px;
+    }
+    .ba-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+    .ba-panel { background: var(--surface); padding: 40px; position: relative; }
+    .ba-panel-header {
+      font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.12em;
+      text-transform: uppercase; margin-bottom: 28px; padding-bottom: 16px;
+      border-bottom: 2px solid;
+    }
+    .ba-panel.ba-before .ba-panel-header { color: var(--accent2); border-bottom-color: var(--accent2); }
+    .ba-panel.ba-after .ba-panel-header { color: var(--accent); border-bottom-color: var(--accent); }
+    .ba-step {
+      display: grid; grid-template-columns: 72px 1fr; gap: 16px;
+      padding: 12px 0; border-bottom: 1px solid var(--border); align-items: start;
+    }
+    .ba-step:last-of-type { border-bottom: none; }
+    .ba-time {
+      font-family: 'DM Mono', monospace; font-size: 12px; color: var(--muted);
+      white-space: nowrap; padding-top: 2px;
+    }
+    .ba-desc { font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--body); line-height: 1.5; }
+    .ba-desc .ba-duration {
+      font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); margin-left: 6px;
+    }
+    .ba-before .ba-desc .ba-duration { color: var(--accent2); }
+    .ba-after .ba-desc .ba-duration { color: var(--accent); }
+    .ba-total {
+      margin-top: 24px; padding-top: 20px; border-top: 2px solid var(--border);
+      display: flex; justify-content: space-between; align-items: baseline;
+    }
+    .ba-total-label {
+      font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted);
+      letter-spacing: 0.1em; text-transform: uppercase;
+    }
+    .ba-total-value { font-family: 'Playfair Display', serif; font-weight: 900; font-size: 32px; line-height: 1; }
+    .ba-before .ba-total-value { color: var(--accent2); }
+    .ba-after .ba-total-value { color: var(--accent); }
+    .ba-verdict {
+      text-align: center; margin-top: 48px; font-family: 'DM Sans', sans-serif;
+      font-size: 16px; color: var(--body);
+    }
+    .ba-verdict strong { color: var(--accent); font-weight: 500; }
+    @media (max-width: 900px) {
+      .ba-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── COST OF INACTION TICKER (fixed footer) ─────────── */
+    #inaction-ticker {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 999;
+      background: var(--off); border-top: 1px solid var(--border);
+      padding: 14px clamp(16px, 4vw, 40px);
+      display: flex; align-items: center; justify-content: center; gap: clamp(12px, 2vw, 28px);
+      font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--body);
+      transform: translateY(100%); transition: transform 0.5s ease;
+      flex-wrap: wrap;
+    }
+    #inaction-ticker.coi-show { transform: translateY(0); }
+    .coi-label { white-space: nowrap; }
+    .coi-amount {
+      font-family: 'DM Mono', monospace; font-size: clamp(18px, 2.5vw, 24px);
+      font-weight: 500; color: var(--accent); min-width: 90px; letter-spacing: 0.02em;
+    }
+    .coi-cta {
+      background: var(--accent2); color: #fff; border: none; padding: 10px 22px;
+      font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
+      cursor: pointer; letter-spacing: 0.04em; text-transform: uppercase;
+      text-decoration: none; white-space: nowrap; transition: opacity 0.2s;
+    }
+    .coi-cta:hover { opacity: 0.85; }
+    .coi-close {
+      background: none; border: none; color: var(--muted); font-size: 18px;
+      cursor: pointer; padding: 4px 8px; line-height: 1; font-family: 'DM Sans', sans-serif;
+      transition: color 0.2s;
+    }
+    .coi-close:hover { color: var(--body); }
+    @media (max-width: 600px) {
+      #inaction-ticker { font-size: 12px; padding: 10px 12px; gap: 8px; }
+      .coi-amount { font-size: 16px; }
+      .coi-cta { padding: 8px 14px; font-size: 11px; }
+    }
   </style>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18002848701"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'AW-18002848701');
-</script>
-<script>
-  gtag('event', 'conversion', {
-    'send_to': 'AW-18002848701/nJO4CJPKh4UcEL3XtohD',
-    'value': 1.0,
-    'currency': 'AUD'
-  });
-</script>
 </head>
 <body>
 
 <!-- NAV -->
 <nav id="navbar">
-  <a href="#" class="nav-logo">Whitakr Automate</a>
-  <a href="https://calendly.com/whitakr-automate/30min" target="_blank" class="nav-cta">Book Free Call</a>
+  <a href="/" class="nav-logo">Whitakr Automate</a>
+  <div class="nav-links">
+    <a href="/blog" class="nav-link">Blog</a>
+    <a href="/calculator/" class="nav-link">Calculator</a>
+    <a href="https://calendly.com/whitakr-automate/30min" target="_blank" class="nav-cta">Book Free Call</a>
+  </div>
 </nav>
 
 <!-- HERO -->
@@ -680,6 +850,58 @@
   </div>
 </section>
 
+<!-- FIVE-MINUTE MATH -->
+<section id="five-minute-math">
+  <div class="fmp-container">
+    <div class="fmp-label">The Five-Minute Problem</div>
+
+    <div class="fmp-line fmp-starter" data-fmp-order="1">"It's just 5 minutes."</div>
+    <div class="fmp-line" data-fmp-order="2">&times; 10 staff</div>
+    <div class="fmp-line" data-fmp-order="3">&times; 5 days per week</div>
+    <div class="fmp-line" data-fmp-order="4">&times; 52 weeks per year</div>
+    <div class="fmp-line" data-fmp-order="5">= 216.7 hours</div>
+    <div class="fmp-line" data-fmp-order="6">&times; $500/hr</div>
+
+    <div class="fmp-result" data-fmp-order="7">$108,333</div>
+    <div class="fmp-subtext" data-fmp-order="7">Lost. Every year. To one task.</div>
+  </div>
+</section>
+
+<!-- COST CALCULATOR -->
+<section id="cost-calculator">
+  <div class="calc-container">
+    <div class="calc-label">Calculate Your Cost</div>
+    <h2 class="calc-heading">What's "just 5 minutes" really costing you?</h2>
+    <p class="calc-subhead">Enter your numbers. The math speaks for itself.</p>
+
+    <div class="calc-inputs">
+      <div class="calc-field">
+        <label for="calc-staff">How many staff handle admin tasks?</label>
+        <input type="number" id="calc-staff" value="10" min="1" max="500">
+      </div>
+      <div class="calc-field">
+        <label for="calc-rate">Average billing rate ($/hr)</label>
+        <input type="number" id="calc-rate" value="400" min="50" max="2000">
+      </div>
+    </div>
+
+    <div class="calc-results">
+      <div class="calc-result-row">
+        <span class="calc-result-label">Hours lost per year</span>
+        <span class="calc-result-value" id="calc-hours">216.7 hrs</span>
+      </div>
+      <div class="calc-result-row">
+        <span class="calc-result-label">Annual cost of "just 5 minutes"</span>
+        <span class="calc-result-value" id="calc-annual">$86,667</span>
+      </div>
+      <div class="calc-result-row calc-highlight">
+        <span class="calc-result-label">If you have 12 such tasks</span>
+        <span class="calc-result-value" id="calc-twelve">$1,040,000</span>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- SERVICES -->
 <section id="services">
   <div class="container">
@@ -747,6 +969,84 @@
       </div>
 
     </div>
+  </div>
+</section>
+
+<!-- BEFORE/AFTER COMPARISON -->
+<section id="before-after">
+  <div class="ba-container">
+    <div class="ba-label">The Difference</div>
+    <h2 class="ba-heading reveal">The same morning.<br>Two different firms.</h2>
+
+    <div class="ba-grid reveal">
+      <!-- BEFORE -->
+      <div class="ba-panel ba-before">
+        <div class="ba-panel-header">Before Automation</div>
+
+        <div class="ba-step">
+          <span class="ba-time">8:00 am</span>
+          <span class="ba-desc">Open emails <span class="ba-duration">(15 min)</span></span>
+        </div>
+        <div class="ba-step">
+          <span class="ba-time">8:15 am</span>
+          <span class="ba-desc">Enter enquiry details <span class="ba-duration">(20 min)</span></span>
+        </div>
+        <div class="ba-step">
+          <span class="ba-time">8:35 am</span>
+          <span class="ba-desc">Search conflicts register <span class="ba-duration">(10 min)</span></span>
+        </div>
+        <div class="ba-step">
+          <span class="ba-time">8:45 am</span>
+          <span class="ba-desc">Draft response email <span class="ba-duration">(15 min)</span></span>
+        </div>
+        <div class="ba-step">
+          <span class="ba-time">9:00 am</span>
+          <span class="ba-desc">File documents <span class="ba-duration">(10 min)</span></span>
+        </div>
+        <div class="ba-step">
+          <span class="ba-time">9:10 am</span>
+          <span class="ba-desc">Update spreadsheet <span class="ba-duration">(5 min)</span></span>
+        </div>
+        <div class="ba-step">
+          <span class="ba-time">9:15 am</span>
+          <span class="ba-desc" style="color: var(--accent2); font-style: italic;">Next enquiry arrives...</span>
+        </div>
+
+        <div class="ba-total">
+          <span class="ba-total-label">Per enquiry</span>
+          <span class="ba-total-value">35 min</span>
+        </div>
+      </div>
+
+      <!-- AFTER -->
+      <div class="ba-panel ba-after">
+        <div class="ba-panel-header">After Automation</div>
+
+        <div class="ba-step">
+          <span class="ba-time">8:00 am</span>
+          <span class="ba-desc">AI processed overnight enquiries <span class="ba-duration">(auto)</span></span>
+        </div>
+        <div class="ba-step">
+          <span class="ba-time">8:01 am</span>
+          <span class="ba-desc">Review dashboard: 12 enquiries processed <span class="ba-duration">(9 min)</span></span>
+        </div>
+        <div class="ba-step">
+          <span class="ba-time">8:10 am</span>
+          <span class="ba-desc">Approve 3 viable matters <span class="ba-duration">(5 min)</span></span>
+        </div>
+        <div class="ba-step">
+          <span class="ba-time">8:15 am</span>
+          <span class="ba-desc" style="color: var(--accent); font-weight: 500;">Begin legal work</span>
+        </div>
+
+        <div class="ba-total">
+          <span class="ba-total-label">Per enquiry</span>
+          <span class="ba-total-value">3 min</span>
+        </div>
+      </div>
+    </div>
+
+    <p class="ba-verdict reveal">Same enquiries. Same morning. <strong>91% less time on admin.</strong></p>
   </div>
 </section>
 
@@ -898,11 +1198,19 @@
         © 2026 Whitakr Automate
       </div>
       <div class="footer-right">
-        whitakr.com.au · Melbourne, VIC · <a href="/privacy.html" style="color: var(--muted); text-decoration: none;">Privacy Policy</a> · <a href="/terms.html" style="color: var(--muted); text-decoration: none;">Terms</a>
+        whitakr.com.au · Melbourne, VIC
       </div>
     </div>
   </div>
 </footer>
+
+<!-- COST OF INACTION TICKER -->
+<div id="inaction-ticker">
+  <span class="coi-label">Revenue lost to manual processes since you opened this page:</span>
+  <span class="coi-amount" id="coi-counter">$0.00</span>
+  <a href="https://calendly.com/whitakr-automate/30min" target="_blank" class="coi-cta">Stop the clock &rarr;</a>
+  <button class="coi-close" id="coi-dismiss" aria-label="Dismiss">&times;</button>
+</div>
 
 <script>
   // Nav scroll
@@ -927,7 +1235,7 @@
   // Flow diagram pulse animation
   const nodes = document.querySelectorAll('.flow-node');
   const lines = document.querySelectorAll('.flow-line');
-  
+
   let currentNode = 0;
   setInterval(() => {
     nodes.forEach(n => n.classList.remove('active'));
@@ -938,6 +1246,83 @@
     }
     currentNode = (currentNode + 1) % nodes.length;
   }, 1200);
+
+  // ── Five-Minute Math scroll reveal ──────────────────
+  (function() {
+    var fmpTriggered = false;
+    var fmpSection = document.getElementById('five-minute-math');
+    if (!fmpSection) return;
+    var fmpLines = fmpSection.querySelectorAll('[data-fmp-order]');
+
+    function revealFMP() {
+      if (fmpTriggered) return;
+      var rect = fmpSection.getBoundingClientRect();
+      if (rect.top < window.innerHeight * 0.7) {
+        fmpTriggered = true;
+        var ordered = Array.from(fmpLines).sort(function(a, b) {
+          return parseInt(a.getAttribute('data-fmp-order')) - parseInt(b.getAttribute('data-fmp-order'));
+        });
+        ordered.forEach(function(el, i) {
+          setTimeout(function() { el.classList.add('fmp-visible'); }, i * 500);
+        });
+      }
+    }
+    window.addEventListener('scroll', revealFMP);
+    revealFMP();
+  })();
+
+  // ── Hidden Cost Calculator ──────────────────────────
+  (function() {
+    var staffInput = document.getElementById('calc-staff');
+    var rateInput = document.getElementById('calc-rate');
+    if (!staffInput || !rateInput) return;
+    var hoursEl = document.getElementById('calc-hours');
+    var annualEl = document.getElementById('calc-annual');
+    var twelveEl = document.getElementById('calc-twelve');
+
+    function calcUpdate() {
+      var staff = parseFloat(staffInput.value) || 0;
+      var rate = parseFloat(rateInput.value) || 0;
+      var hoursPerStaff = (5 * 5 * 52) / 60; // 21.6667
+      var totalHours = staff * hoursPerStaff;
+      var annualCost = totalHours * rate;
+      var twelveTasks = annualCost * 12;
+
+      hoursEl.textContent = totalHours.toFixed(1) + ' hrs';
+      annualEl.textContent = '$' + Math.round(annualCost).toLocaleString('en-US');
+      twelveEl.textContent = '$' + Math.round(twelveTasks).toLocaleString('en-US');
+    }
+
+    staffInput.addEventListener('input', calcUpdate);
+    rateInput.addEventListener('input', calcUpdate);
+    calcUpdate();
+  })();
+
+  // ── Cost of Inaction Ticker ─────────────────────────
+  (function() {
+    var ticker = document.getElementById('inaction-ticker');
+    var counter = document.getElementById('coi-counter');
+    var dismiss = document.getElementById('coi-dismiss');
+    if (!ticker || !counter || !dismiss) return;
+
+    var ratePerMs = 180000 / (525600 * 60 * 1000); // $180K/yr in $/ms
+    var startTime = Date.now();
+    var interval;
+
+    setTimeout(function() { ticker.classList.add('coi-show'); }, 3000);
+
+    interval = setInterval(function() {
+      var elapsed = Date.now() - startTime;
+      var amount = elapsed * ratePerMs;
+      counter.textContent = '$' + amount.toFixed(2);
+    }, 100);
+
+    dismiss.addEventListener('click', function() {
+      ticker.classList.remove('coi-show');
+      clearInterval(interval);
+      setTimeout(function() { ticker.style.display = 'none'; }, 600);
+    });
+  })();
 </script>
 
 </body>

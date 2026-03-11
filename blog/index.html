@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Insights — Whitakr Automate</title>
+  <meta name="description" content="Practical insights on AI workflow automation for Australian medical negligence law firms. Save time, reduce admin, and focus on the work that matters." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/blog/blog-styles.css" />
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="/" class="nav-logo">Whitakr Automate</a>
+  <div class="nav-links">
+    <a href="/blog" class="nav-link active">Blog</a>
+    <a href="/calculator" class="nav-link">Calculator</a>
+    <a href="/" class="nav-link">Home</a>
+    <a href="https://calendly.com/whitakr-automate/30min" target="_blank" class="nav-cta">Book Free Call</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="blog-hero">
+  <div class="blog-hero-bg"></div>
+  <div class="container">
+    <h1>Insights</h1>
+    <p class="blog-hero-sub">Practical thinking on AI automation for small Australian law firms specialising in medical negligence.</p>
+  </div>
+</section>
+
+<!-- BLOG GRID -->
+<section class="container">
+  <div class="blog-grid">
+
+    <!-- Card 1 -->
+    <a href="/blog/the-hidden-cost-of-just-five-minutes" class="post-card reveal">
+      <div class="post-card-category">Efficiency</div>
+      <h3>The Hidden Cost of &lsquo;Just Five Minutes&rsquo;</h3>
+      <p class="post-card-hook">Nobody worries about a 5-minute task. That belief is costing you $108,000 a year.</p>
+      <div class="post-card-meta">
+        <span>6 min read</span>
+        <span class="post-card-link">Read More &rarr;</span>
+      </div>
+    </a>
+
+    <!-- More posts coming soon -->
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-left">
+        &copy; 2026 Whitakr Automate
+      </div>
+      <div class="footer-right">
+        whitakr.com.au &middot; Melbourne, VIC
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Nav scroll
+  const nav = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+  });
+
+  // Reveal on scroll
+  document.body.classList.add('js-loaded');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
